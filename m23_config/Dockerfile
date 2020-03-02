@@ -1,7 +1,10 @@
 FROM mike/debian_config
 MAINTAINER chandlerbing7@gmail.com
 
-RUN composer create-project --repository=https://repo.magento.com/ magento/project-community-edition /var/www/html/magento2ce/
+ARG SHOP_VERSION=2.3.4
+ARG BASE_URL="http://qqa8xzueii.magento2.eu.ngrok.io"
+
+RUN composer create-project --repository=https://repo.magento.com/ magento/project-community-edition /var/www/html/magento2ce/ ${SHOP_VERSION} --prefer-dist
 #RUN composer create-project --repository=https://repo.magento.com/ magento/project-enterprise-edition /var/www/html/magento2ce/
 RUN mkdir /var/www/html/magento2ce/var/composer_home/
 RUN touch /var/www/html/magento2ce/var/composer_home/auth.json
@@ -16,10 +19,10 @@ RUN cd /var/www/html/magento2ce/ && \
 	mv package.json.sample package.json
 RUN /etc/init.d/mysql start && \
 	cd /var/www/html/magento2ce/ &&  \
-	php bin/magento setup:install --base-url=http://magento2u.loc:8080 \
+	php bin/magento setup:install --base-url="${BASE_URL}" \
 	--admin-firstname=admin --admin-lastname=admin --backend-frontname=admin \
 	--admin-email=chandlerbing7@gmail.com --admin-user=admin \
-	--admin-password=mageU123 --db-name=m2 --db-host=localhost --db-user=root \
+	--admin-password=asdasd123 --db-name=m2 --db-host=localhost --db-user=root \
 	--use-rewrites=1 --admin-use-security-key=0 ; \
 	php bin/magento index:reindex ; \
 	php bin/magento c:c ; \
@@ -27,7 +30,7 @@ RUN /etc/init.d/mysql start && \
 	npm install -g grunt-cli && \
 	npm install && \
 	grunt exec && \
-	grunt less
+	grunt less --force
 
 RUN chown -R www-data:www-data /var/www/html/magento2ce/
 
