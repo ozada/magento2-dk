@@ -2,7 +2,7 @@ FROM mike/debian_config
 MAINTAINER chandlerbing7@gmail.com
 
 ARG SHOP_VERSION=2.3.4
-ARG BASE_URL="http://qqa8xzueii.magento2.eu.ngrok.io"
+ARG BASE_URL="<URL-STRING>"
 
 RUN composer create-project --repository=https://repo.magento.com/ magento/project-community-edition /var/www/html/magento2ce/ ${SHOP_VERSION} --prefer-dist
 #RUN composer create-project --repository=https://repo.magento.com/ magento/project-enterprise-edition /var/www/html/magento2ce/
@@ -38,5 +38,7 @@ RUN apt --purge autoremove -y ; apt clean
 
 ENTRYPOINT 	/etc/init.d/mysql start && service sendmail restart && \
 			service apache2 restart && bash
+
+RUN service cron start
 
 EXPOSE 80

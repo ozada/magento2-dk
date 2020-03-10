@@ -6,6 +6,11 @@ services:
       context: ./debian_config/
     image: mike/debian_config
     container_name: base
+  mailhog:
+    image: 'mailhog/mailhog'
+    ports:
+      - '1025:1025'
+      - '8028:8025'
   m23:
     build: ./m23_config/
     image: mike/m23_config
@@ -14,6 +19,7 @@ services:
     ports:
       - "8080:80"
       - "4306:3306"
+      - "22964:22"
     volumes:
 #       - /Path/To/Your/magento/magento2-dev-dk/instances:/var/www/html/shared
 #       - /Users/molochko/Sites/magento/magento2-dev-dk/instances:/var/www/html/shared

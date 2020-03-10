@@ -72,4 +72,21 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 # Git
 RUN apt install -y git
 
+#Install cron
+RUN apt-get install cron
+
+# Install n98-magerun2.phar and move to /usr/local/bin/
+RUN curl -O https://files.magerun.net/n98-magerun2.phar && chmod +x ./n98-magerun2.phar && mv ./n98-magerun2.phar /usr/local/bin/
+
+#Install golang needed for getting mhsendmail from git
+RUN curl -Lsf 'https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz' | tar -C '/usr/local' -xvzf -
+ENV PATH /usr/local/go/bin:$PATH
+
+#Install the mhsendmail
+RUN go get github.com/mailhog/mhsendmail
+RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
+
+#Install composer packages in parrallel
+RUN composer global require hirak/prestissimo
+
 RUN apt --purge autoremove -y ; apt clean
